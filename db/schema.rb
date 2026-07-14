@@ -10,9 +10,53 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_14_192423) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_000300) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "homes", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.text "address"
+    t.datetime "created_at", null: false
+    t.string "home_type"
+    t.string "name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id"], name: "index_homes_on_account_id"
+    t.check_constraint "home_type IS NULL OR (home_type::text = ANY (ARRAY['house'::character varying, 'condo'::character varying, 'apartment'::character varying, 'rental'::character varying, 'other'::character varying]::text[]))", name: "homes_home_type_check"
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string "brand"
+    t.datetime "created_at", null: false
+    t.bigint "home_id", null: false
+    t.date "installed_on"
+    t.string "item_kind", null: false
+    t.string "model_number"
+    t.string "name", null: false
+    t.text "notes"
+    t.string "serial_number"
+    t.datetime "updated_at", null: false
+    t.index ["home_id"], name: "index_items_on_home_id"
+    t.check_constraint "item_kind::text = ANY (ARRAY['appliance'::character varying, 'system'::character varying]::text[])", name: "items_item_kind_check"
+  end
+
+  create_table "memberships", force: :cascade do |t|
+    t.bigint "account_id", null: false
+    t.datetime "created_at", null: false
+    t.string "role", default: "owner", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["account_id"], name: "index_memberships_on_account_id"
+    t.index ["user_id", "account_id"], name: "index_memberships_on_user_id_and_account_id", unique: true
+    t.index ["user_id"], name: "index_memberships_on_user_id"
+    t.check_constraint "role::text = 'owner'::text", name: "memberships_role_check"
+  end
 
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -31,5 +75,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_14_192423) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "homes", "accounts"
+  add_foreign_key "items", "homes"
+  add_foreign_key "memberships", "accounts"
+  add_foreign_key "memberships", "users"
   add_foreign_key "sessions", "users"
 end

@@ -1,0 +1,9 @@
+owner_membership:
+  user: owner
+  account: household
+  role: owner
+
+other_owner_membership:
+  user: other_owner
+  account: other_household
+  role: owner

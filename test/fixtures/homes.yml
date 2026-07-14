@@ -1,0 +1,11 @@
+main:
+  account: household
+  name: Main Home
+  address: 123 Main Street
+  home_type: house
+
+other:
+  account: other_household
+  name: Other Home
+  address: 456 Other Avenue
+  home_type: condo
