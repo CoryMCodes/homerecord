@@ -1,12 +1,7 @@
 ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
-
-module AuthenticationTestHelper
-  def sign_in_as(user, password: "password")
-    post session_url, params: { email_address: user.email_address, password: password }
-  end
-end
+require_relative "test_helpers/session_test_helper"
 
 module ActiveSupport
   class TestCase
@@ -17,5 +12,3 @@ module ActiveSupport
     fixtures :all
   end
 end
-
-ActionDispatch::IntegrationTest.include AuthenticationTestHelper

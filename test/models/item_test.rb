@@ -14,4 +14,11 @@ class ItemTest < ActiveSupport::TestCase
     assert_not item.valid?
     assert_includes item.errors[:item_kind], "is not included in the list"
   end
+
+  test "does not move homes when entries reference it" do
+    item = items(:water_heater)
+
+    assert_not item.update(home: homes(:other))
+    assert_includes item.errors[:home], "cannot change while entries reference this item"
+  end
 end

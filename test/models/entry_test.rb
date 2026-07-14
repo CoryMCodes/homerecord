@@ -22,6 +22,13 @@ class EntryTest < ActiveSupport::TestCase
     assert_includes entry.errors[:entry_type], "is not included in the list"
   end
 
+  test "requires creator" do
+    entry = Entry.new(home: homes(:main), entry_type: "replacement", title: "Replaced water heater", occurred_on: Date.current)
+
+    assert_not entry.valid?
+    assert_includes entry.errors[:created_by_user], "must exist"
+  end
+
   test "allows blank item" do
     entry = Entry.new(home: homes(:main), created_by_user: users(:owner), entry_type: "memory", title: "Moved in", occurred_on: Date.current)
 
@@ -32,6 +39,24 @@ class EntryTest < ActiveSupport::TestCase
     entry = Entry.new(
       home: homes(:main),
       item: items(:other_water_heater),
+      created_by_user: users(:owner),
+      entry_type: "replacement",
+      title: "Replaced water heater",
+      occurred_on: Date.current
+    )
+
+    assert_not entry.valid?
+    assert_includes entry.errors[:item], "must belong to the same home"
+  end
+
+  test "rejects unsaved item from another unsaved home" do
+    account = Account.new(name: "Draft account")
+    home = Home.new(account: account, name: "Draft home")
+    other_home = Home.new(account: account, name: "Other draft home")
+    item = Item.new(home: other_home, item_kind: "appliance", name: "Draft water heater")
+    entry = Entry.new(
+      home: home,
+      item: item,
       created_by_user: users(:owner),
       entry_type: "replacement",
       title: "Replaced water heater",

@@ -16,6 +16,6 @@ class Entry < ApplicationRecord
   def item_belongs_to_home
     return if item.blank? || home.blank?
 
-    errors.add(:item, "must belong to the same home") if item.home_id != home_id
+    errors.add(:item, "must belong to the same home") if item.home != home
   end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_000400) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_000500) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,6 +62,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_000400) do
     t.string "serial_number"
     t.datetime "updated_at", null: false
     t.index ["home_id"], name: "index_items_on_home_id"
+    t.index ["id", "home_id"], name: "index_items_on_id_and_home_id", unique: true
     t.check_constraint "item_kind::text = ANY (ARRAY['appliance'::character varying, 'system'::character varying]::text[])", name: "items_item_kind_check"
   end
 
@@ -96,6 +97,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_000400) do
 
   add_foreign_key "entries", "homes"
   add_foreign_key "entries", "items"
+  add_foreign_key "entries", "items", column: ["item_id", "home_id"], primary_key: ["id", "home_id"], name: "fk_entries_item_home"
   add_foreign_key "entries", "users", column: "created_by_user_id"
   add_foreign_key "homes", "accounts"
   add_foreign_key "items", "homes"
