@@ -1,0 +1,17 @@
+water_heater_replacement:
+  home: main
+  item: water_heater
+  entry_type: replacement
+  title: Replaced water heater
+  occurred_on: 2024-01-15
+  description: Replaced the failing tank water heater.
+  cost_cents: 180000
+  contractor_name: Reliable Plumbing
+  created_by_user: owner
+
+move_in:
+  home: main
+  entry_type: memory
+  title: Moved in
+  occurred_on: 2023-09-01
+  created_by_user: owner

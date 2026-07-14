@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_07_15_000300) do
+ActiveRecord::Schema[8.1].define(version: 2026_07_15_000400) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -18,6 +18,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_000300) do
     t.datetime "created_at", null: false
     t.string "name", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "entries", force: :cascade do |t|
+    t.string "contractor_name"
+    t.integer "cost_cents"
+    t.datetime "created_at", null: false
+    t.bigint "created_by_user_id", null: false
+    t.text "description"
+    t.string "entry_type", null: false
+    t.bigint "home_id", null: false
+    t.bigint "item_id"
+    t.date "occurred_on", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_by_user_id"], name: "index_entries_on_created_by_user_id"
+    t.index ["home_id"], name: "index_entries_on_home_id"
+    t.index ["item_id"], name: "index_entries_on_item_id"
+    t.check_constraint "cost_cents IS NULL OR cost_cents >= 0", name: "entries_cost_cents_check"
+    t.check_constraint "entry_type::text = ANY (ARRAY['maintenance'::character varying, 'repair'::character varying, 'installation'::character varying, 'replacement'::character varying, 'inspection'::character varying, 'purchase'::character varying, 'note'::character varying, 'memory'::character varying]::text[])", name: "entries_entry_type_check"
   end
 
   create_table "homes", force: :cascade do |t|
@@ -75,6 +94,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_07_15_000300) do
     t.index ["email_address"], name: "index_users_on_email_address", unique: true
   end
 
+  add_foreign_key "entries", "homes"
+  add_foreign_key "entries", "items"
+  add_foreign_key "entries", "users", column: "created_by_user_id"
   add_foreign_key "homes", "accounts"
   add_foreign_key "items", "homes"
   add_foreign_key "memberships", "accounts"
