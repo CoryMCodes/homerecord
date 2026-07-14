@@ -1,0 +1,9 @@
+<% content_for :title, @home.name %>
+
+<section>
+  <h1><%= @home.name %></h1>
+
+  <% if @home.address.present? %>
+    <p><%= @home.address %></p>
+  <% end %>
+</section>
