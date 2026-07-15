@@ -1,9 +1,30 @@
 <% content_for :title, @home.name %>
 
 <section>
+  <p><%= link_to "Homes", homes_path %></p>
+
   <h1><%= @home.name %></h1>
 
   <% if @home.address.present? %>
     <p><%= @home.address %></p>
+  <% end %>
+
+  <h2>Timeline</h2>
+
+  <% if @timeline_entries.any? %>
+    <ol>
+      <% @timeline_entries.each do |entry| %>
+        <li>
+          <h3><%= entry.title %></h3>
+          <p><%= entry.occurred_on.to_fs(:long) %></p>
+
+          <% if entry.description.present? %>
+            <p><%= entry.description %></p>
+          <% end %>
+        </li>
+      <% end %>
+    </ol>
+  <% else %>
+    <p>No timeline entries yet.</p>
   <% end %>
 </section>

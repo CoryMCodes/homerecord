@@ -19,6 +19,7 @@ class HomesController < ApplicationController
 
   def show
     @home = current_account.homes.find(params[:id])
+    @timeline_entries = @home.entries.order(occurred_on: :desc, id: :desc)
   end
 
   private

@@ -74,4 +74,29 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Add a home"
     assert_select "[role='alert']", /Name can't be blank/
   end
+
+  test "shows timeline entries newest first" do
+    sign_in_as users(:owner)
+
+    get home_url(homes(:main))
+
+    assert_response :success
+    assert_select "h2", "Timeline"
+    assert_select "ol li", 2
+
+    timeline_titles = css_select("ol li h3").map(&:text)
+    assert_equal [ "Replaced water heater", "Moved in" ], timeline_titles
+  end
+
+  test "shows an empty timeline state when the home has no entries" do
+    sign_in_as users(:owner)
+    home = accounts(:household).homes.create!(name: "Empty Home")
+
+    get home_url(home)
+
+    assert_response :success
+    assert_select "h2", "Timeline"
+    assert_select "p", "No timeline entries yet."
+    assert_select "ol li", 0
+  end
 end
