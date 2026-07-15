@@ -1,0 +1,14 @@
+water_heater:
+  home: main
+  item_kind: appliance
+  name: Water Heater
+  brand: Rheem
+  model_number: WH-100
+  serial_number: SN-100
+  installed_on: 2024-01-15
+  notes: Basement utility closet
+
+other_water_heater:
+  home: other
+  item_kind: appliance
+  name: Other Water Heater
