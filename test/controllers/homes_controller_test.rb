@@ -39,7 +39,8 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
         home: {
           name: "Lake House",
           address: "9 Lake Road",
-          home_type: "house"
+          home_type: "house",
+          account_id: accounts(:other_household).id
         }
       }
     end
@@ -86,6 +87,29 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
 
     timeline_titles = css_select("ol li h3").map(&:text)
     assert_equal [ "Replaced water heater", "Moved in" ], timeline_titles
+  end
+
+  test "orders timeline entries with a stable newest id tie breaker" do
+    sign_in_as users(:owner)
+    home = accounts(:household).homes.create!(name: "Same Day Home")
+    older_entry = home.entries.create!(
+      entry_type: "note",
+      title: "Earlier same day note",
+      occurred_on: Date.new(2025, 1, 1),
+      created_by_user: users(:owner)
+    )
+    newer_entry = home.entries.create!(
+      entry_type: "note",
+      title: "Later same day note",
+      occurred_on: older_entry.occurred_on,
+      created_by_user: users(:owner)
+    )
+
+    get home_url(home)
+
+    assert_response :success
+    timeline_titles = css_select("ol li h3").map(&:text)
+    assert_equal [ newer_entry.title, older_entry.title ], timeline_titles
   end
 
   test "shows an empty timeline state when the home has no entries" do
