@@ -4,6 +4,8 @@
   <h1>Homes</h1>
 
   <% if @homes.any? %>
+    <p><%= link_to "Add a home", new_home_path %></p>
+
     <ul>
       <% @homes.each do |home| %>
         <li><%= link_to home.name, home_path(home) %></li>
@@ -11,5 +13,6 @@
     </ul>
   <% else %>
     <p>No homes yet.</p>
+    <p><%= link_to "Add your first home", new_home_path %></p>
   <% end %>
 </section>

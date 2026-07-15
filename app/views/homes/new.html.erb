@@ -1,0 +1,36 @@
+<% content_for :title, "Add a home" %>
+
+<section>
+  <h1>Add a home</h1>
+
+  <% if @home.errors.any? %>
+    <div role="alert">
+      <p>Please check the home details.</p>
+
+      <ul>
+        <% @home.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= form_with model: @home do |form| %>
+    <div>
+      <%= form.label :name %>
+      <%= form.text_field :name, required: true, autofocus: true %>
+    </div>
+
+    <div>
+      <%= form.label :address %>
+      <%= form.text_area :address, rows: 3 %>
+    </div>
+
+    <div>
+      <%= form.label :home_type, "Home type" %>
+      <%= form.select :home_type, options_for_select(Home::HOME_TYPES.map { |home_type| [ home_type.humanize, home_type ] }, @home.home_type), include_blank: true %>
+    </div>
+
+    <%= form.submit "Create home" %>
+  <% end %>
+</section>
