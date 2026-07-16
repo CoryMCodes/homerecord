@@ -1,5 +1,6 @@
 class ItemsController < ApplicationController
   before_action :set_home
+  before_action :set_item, only: %i[show edit update]
 
   def index
     @items = @home.items.order(:name)
@@ -19,10 +20,28 @@ class ItemsController < ApplicationController
     end
   end
 
+  def show
+  end
+
+  def edit
+  end
+
+  def update
+    if @item.update(item_params)
+      redirect_to home_item_path(@home, @item), status: :see_other
+    else
+      render :edit, status: :unprocessable_entity
+    end
+  end
+
   private
 
   def set_home
     @home = current_account.homes.find(params[:home_id])
+  end
+
+  def set_item
+    @item = @home.items.find(params[:id])
   end
 
   def item_params

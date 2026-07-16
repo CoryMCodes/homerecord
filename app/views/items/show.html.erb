@@ -1,0 +1,9 @@
+<% content_for :title, @item.name %>
+
+<section>
+  <p><%= link_to "Back to items", home_items_path(@home) %></p>
+
+  <%= turbo_frame_tag dom_id(@item) do %>
+    <%= render "item_details", home: @home, item: @item %>
+  <% end %>
+</section>

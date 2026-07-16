@@ -1,0 +1,9 @@
+<% content_for :title, "Edit #{@item.name}" %>
+
+<%= turbo_frame_tag dom_id(@item) do %>
+  <h1>Edit <%= @item.name %></h1>
+
+  <%= render "form", home: @home, item: @item, submit_label: "Save item" %>
+
+  <p><%= link_to "Cancel", home_item_path(@home, @item) %></p>
+<% end %>

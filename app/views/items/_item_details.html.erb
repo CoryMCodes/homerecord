@@ -1,0 +1,25 @@
+<h1><%= item.name %></h1>
+
+<p><%= item.item_kind.humanize %></p>
+
+<% if item.brand.present? %>
+  <p>Brand: <%= item.brand %></p>
+<% end %>
+
+<% if item.model_number.present? %>
+  <p>Model number: <%= item.model_number %></p>
+<% end %>
+
+<% if item.serial_number.present? %>
+  <p>Serial number: <%= item.serial_number %></p>
+<% end %>
+
+<% if item.installed_on.present? %>
+  <p>Installed on: <%= item.installed_on.to_fs(:long) %></p>
+<% end %>
+
+<% if item.notes.present? %>
+  <p><%= item.notes %></p>
+<% end %>
+
+<p><%= link_to "Edit", edit_home_item_path(home, item), data: { turbo_frame: dom_id(item) } %></p>

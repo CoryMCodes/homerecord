@@ -98,4 +98,113 @@ class ItemsControllerTest < ActionDispatch::IntegrationTest
     assert_select "h1", "Add item"
     assert_select "[role='alert']", /Name can't be blank/
   end
+
+  test "shows an item detail page" do
+    sign_in_as users(:owner)
+    item = items(:water_heater)
+
+    get home_item_url(homes(:main), item)
+
+    assert_response :success
+    assert_select "h1", "Water Heater"
+    assert_select "turbo-frame#item_#{item.id}"
+    assert_select "a[href='#{edit_home_item_path(homes(:main), item)}']", "Edit"
+    assert_select "p", /Rheem/
+    assert_select "p", /WH-100/
+    assert_select "p", /SN-100/
+    assert_select "p", /Basement utility closet/
+  end
+
+  test "does not show an item from another home" do
+    sign_in_as users(:owner)
+
+    get home_item_url(homes(:main), items(:other_water_heater))
+
+    assert_response :not_found
+  end
+
+  test "does not show an item when the nested home is outside the current account" do
+    sign_in_as users(:owner)
+
+    get home_item_url(homes(:other), items(:other_water_heater))
+
+    assert_response :not_found
+  end
+
+  test "renders edit form inside the item turbo frame" do
+    sign_in_as users(:owner)
+    item = items(:water_heater)
+
+    get edit_home_item_url(homes(:main), item), headers: { "Turbo-Frame" => "item_#{item.id}" }
+
+    assert_response :success
+    assert_select "turbo-frame#item_#{item.id}" do
+      assert_select "form[action='#{home_item_path(homes(:main), item)}'][method='post']"
+      assert_select "input[name='_method'][value='patch']"
+      assert_select "select[name='item[item_kind]']"
+      assert_select "input[name='item[name]'][value='Water Heater']"
+      assert_select "input[name='item[brand]'][value='Rheem']"
+      assert_select "textarea[name='item[notes]']", /Basement utility closet/
+    end
+  end
+
+  test "updates an item and redirects with see other" do
+    sign_in_as users(:owner)
+    item = items(:water_heater)
+
+    patch home_item_url(homes(:main), item), params: {
+      item: {
+        item_kind: "system",
+        name: "Heat Pump",
+        brand: "Trane",
+        model_number: "TP-300",
+        serial_number: "SN-300",
+        installed_on: "2026-02-10",
+        notes: "Outdoor unit"
+      }
+    }, headers: { "Turbo-Frame" => "item_#{item.id}" }
+
+    assert_redirected_to home_item_url(homes(:main), item)
+    assert_response :see_other
+
+    item.reload
+    assert_equal "system", item.item_kind
+    assert_equal "Heat Pump", item.name
+    assert_equal "Trane", item.brand
+    assert_equal "TP-300", item.model_number
+    assert_equal "SN-300", item.serial_number
+    assert_equal Date.new(2026, 2, 10), item.installed_on
+    assert_equal "Outdoor unit", item.notes
+
+    follow_redirect!
+
+    assert_response :success
+    assert_select "turbo-frame#item_#{item.id}" do
+      assert_select "h1", "Heat Pump"
+      assert_select "p", /Trane/
+      assert_select "p", /TP-300/
+      assert_select "p", /SN-300/
+      assert_select "p", /Outdoor unit/
+    end
+  end
+
+  test "does not update an invalid item" do
+    sign_in_as users(:owner)
+    item = items(:water_heater)
+
+    patch home_item_url(homes(:main), item), params: {
+      item: {
+        item_kind: "system",
+        name: ""
+      }
+    }, headers: { "Turbo-Frame" => "item_#{item.id}" }
+
+    assert_response :unprocessable_entity
+    assert_select "turbo-frame#item_#{item.id}" do
+      assert_select "form[action='#{home_item_path(homes(:main), item)}'][method='post']"
+      assert_select "[role='alert']", /Name can't be blank/
+    end
+
+    assert_equal "Water Heater", item.reload.name
+  end
 end
