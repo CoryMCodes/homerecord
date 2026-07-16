@@ -123,4 +123,14 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     assert_select "p", "No timeline entries yet."
     assert_select "ol li", 0
   end
+
+  test "timeline links to home scoped items" do
+    sign_in_as users(:owner)
+
+    get home_url(homes(:main))
+
+    assert_response :success
+    assert_select "a[href='#{home_items_path(homes(:main))}']", "View items"
+    assert_select "a[href='#{new_home_item_path(homes(:main))}']", "Add item"
+  end
 end

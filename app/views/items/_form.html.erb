@@ -1,0 +1,50 @@
+<% if item.errors.any? %>
+  <div role="alert">
+    <p>Please check the item details.</p>
+
+    <ul>
+      <% item.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: [ home, item ] do |form| %>
+  <div>
+    <%= form.label :item_kind, "Item kind" %>
+    <%= form.select :item_kind, options_for_select(Item::ITEM_KINDS.map { |item_kind| [ item_kind.humanize, item_kind ] }, item.item_kind), include_blank: true, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name, required: true, autofocus: true %>
+  </div>
+
+  <div>
+    <%= form.label :brand %>
+    <%= form.text_field :brand %>
+  </div>
+
+  <div>
+    <%= form.label :model_number, "Model number" %>
+    <%= form.text_field :model_number %>
+  </div>
+
+  <div>
+    <%= form.label :serial_number, "Serial number" %>
+    <%= form.text_field :serial_number %>
+  </div>
+
+  <div>
+    <%= form.label :installed_on, "Installed on" %>
+    <%= form.date_field :installed_on %>
+  </div>
+
+  <div>
+    <%= form.label :notes %>
+    <%= form.text_area :notes, rows: 4 %>
+  </div>
+
+  <%= form.submit submit_label %>
+<% end %>

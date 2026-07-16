@@ -27,4 +27,9 @@
   <% else %>
     <p>No timeline entries yet.</p>
   <% end %>
+
+  <nav aria-label="Home item actions">
+    <%= link_to "View items", home_items_path(@home) %>
+    <%= link_to "Add item", new_home_item_path(@home) %>
+  </nav>
 </section>

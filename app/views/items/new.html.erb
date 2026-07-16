@@ -1,0 +1,9 @@
+<% content_for :title, "Add item" %>
+
+<section>
+  <p><%= link_to "Back to items", home_items_path(@home) %></p>
+
+  <h1>Add item</h1>
+
+  <%= render "form", home: @home, item: @item, submit_label: "Create item" %>
+</section>

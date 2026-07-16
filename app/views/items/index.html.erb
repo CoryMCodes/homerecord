@@ -1,0 +1,28 @@
+<% content_for :title, "Items for #{@home.name}" %>
+
+<section>
+  <p><%= link_to "Back to timeline", home_path(@home) %></p>
+
+  <h1>Items for <%= @home.name %></h1>
+
+  <p><%= link_to "Add item", new_home_item_path(@home) %></p>
+
+  <% if @items.any? %>
+    <ul>
+      <% @items.each do |item| %>
+        <li>
+          <h2><%= link_to item.name, home_item_path(@home, item) %></h2>
+          <p><%= item.item_kind.humanize %></p>
+
+          <% if item.brand.present? || item.model_number.present? || item.serial_number.present? %>
+            <p>
+              <%= [ item.brand, item.model_number, item.serial_number ].compact_blank.join(" - ") %>
+            </p>
+          <% end %>
+        </li>
+      <% end %>
+    </ul>
+  <% else %>
+    <p>No systems or appliances yet.</p>
+  <% end %>
+</section>
