@@ -15,6 +15,7 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     assert_select "textarea[name='entry[description]']"
     assert_select "input[name='entry[cost]']"
     assert_select "input[name='entry[contractor_name]']"
+    assert_select "input[name='entry[attachments][]'][type='file'][multiple='multiple']"
     assert_select "select[name='entry[item_id]']"
     assert_select "option[value='#{items(:water_heater).id}']", "Water Heater"
     assert_select "option[value='#{items(:other_water_heater).id}']", 0
@@ -84,6 +85,68 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     assert_nil entry.item
     assert_nil entry.cost_cents
     assert_redirected_to home_entry_url(homes(:main), entry)
+  end
+
+  test "creates an entry with attached files" do
+    sign_in_as users(:owner)
+
+    assert_difference -> { Entry.count }, 1 do
+      post home_entries_url(homes(:main)), params: {
+        entry: {
+          entry_type: "replacement",
+          title: "Replaced water heater",
+          occurred_on: "2026-07-10",
+          attachments: [
+            fixture_file_upload("install-photo.jpg", "image/jpeg"),
+            fixture_file_upload("warranty.pdf", "application/pdf")
+          ]
+        }
+      }
+    end
+
+    entry = Entry.order(:created_at).last
+    assert_equal 2, entry.attachments.count
+    assert_equal [ "install-photo.jpg", "warranty.pdf" ], entry.attachments.map { |attachment| attachment.filename.to_s }
+    assert_redirected_to home_entry_url(homes(:main), entry)
+  end
+
+  test "does not create an entry with an unsupported attachment type" do
+    sign_in_as users(:owner)
+
+    assert_no_difference -> { Entry.count } do
+      post home_entries_url(homes(:main)), params: {
+        entry: {
+          entry_type: "note",
+          title: "Saved a note file",
+          occurred_on: "2026-07-10",
+          attachments: [
+            fixture_file_upload("notes.txt", "text/plain")
+          ]
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "[role='alert']", /Attachments must be a JPEG, PNG, HEIC, HEIF, or PDF/
+  end
+
+  test "does not create an entry with more than ten attachments" do
+    sign_in_as users(:owner)
+    uploads = 11.times.map { |index| fixture_file_upload("warranty.pdf", "application/pdf", original_filename: "warranty-#{index}.pdf") }
+
+    assert_no_difference -> { Entry.count } do
+      post home_entries_url(homes(:main)), params: {
+        entry: {
+          entry_type: "note",
+          title: "Saved warranty files",
+          occurred_on: "2026-07-10",
+          attachments: uploads
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "[role='alert']", /Attachments can include at most 10 files/
   end
 
   test "does not create an invalid entry" do
@@ -267,6 +330,22 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     assert_select "p", /Replaced the failing tank water heater./
     assert_select "p", /1,800.00/
     assert_select "p", /Reliable Plumbing/
+  end
+
+  test "shows entry attachments on the detail page" do
+    sign_in_as users(:owner)
+    entry = entries(:water_heater_replacement)
+    entry.attachments.attach(
+      io: File.open(Rails.root.join("test/fixtures/files/warranty.pdf")),
+      filename: "warranty.pdf",
+      content_type: "application/pdf"
+    )
+
+    get home_entry_url(homes(:main), entry)
+
+    assert_response :success
+    assert_select "h2", "Attachments"
+    assert_select "a", "warranty.pdf"
   end
 
   test "shows an entry detail page without optional fields" do

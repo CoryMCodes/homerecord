@@ -94,4 +94,115 @@ class EntryTest < ActiveSupport::TestCase
     assert_not entry.valid?
     assert_includes entry.errors[:cost_cents], "must be less than or equal to #{Entry::MAX_COST_CENTS}"
   end
+
+  test "allows up to ten supported attachments" do
+    entry = Entry.new(
+      home: homes(:main),
+      created_by_user: users(:owner),
+      entry_type: "replacement",
+      title: "Replaced water heater",
+      occurred_on: Date.current
+    )
+    10.times do |index|
+      entry.attachments.attach(
+        io: StringIO.new("pdf"),
+        filename: "receipt-#{index}.pdf",
+        content_type: "application/pdf"
+      )
+    end
+
+    assert entry.valid?
+  end
+
+  test "rejects more than ten attachments" do
+    entry = Entry.new(
+      home: homes(:main),
+      created_by_user: users(:owner),
+      entry_type: "replacement",
+      title: "Replaced water heater",
+      occurred_on: Date.current
+    )
+    11.times do |index|
+      entry.attachments.attach(
+        io: StringIO.new("pdf"),
+        filename: "receipt-#{index}.pdf",
+        content_type: "application/pdf"
+      )
+    end
+
+    assert_not entry.valid?
+    assert_includes entry.errors[:attachments], "can include at most 10 files"
+  end
+
+  test "rejects unsupported attachment content type" do
+    entry = Entry.new(
+      home: homes(:main),
+      created_by_user: users(:owner),
+      entry_type: "replacement",
+      title: "Replaced water heater",
+      occurred_on: Date.current
+    )
+    entry.attachments.attach(
+      io: StringIO.new("text"),
+      filename: "notes.txt",
+      content_type: "text/plain"
+    )
+
+    assert_not entry.valid?
+    assert_includes entry.errors[:attachments], "must be a JPEG, PNG, HEIC, HEIF, or PDF"
+  end
+
+  test "allows iphone heic photos" do
+    entry = Entry.new(
+      home: homes(:main),
+      created_by_user: users(:owner),
+      entry_type: "replacement",
+      title: "Replaced water heater",
+      occurred_on: Date.current
+    )
+    entry.attachments.attach(
+      io: StringIO.new("heic"),
+      filename: "install-photo.heic",
+      content_type: "image/heic"
+    )
+
+    assert entry.valid?
+  end
+
+  test "rejects supported content type with unsupported extension" do
+    entry = Entry.new(
+      home: homes(:main),
+      created_by_user: users(:owner),
+      entry_type: "replacement",
+      title: "Replaced water heater",
+      occurred_on: Date.current
+    )
+    entry.attachments.attach(
+      io: StringIO.new("pdf"),
+      filename: "warranty.txt",
+      content_type: "application/pdf"
+    )
+
+    assert_not entry.valid?
+    assert_includes entry.errors[:attachments], "must use a .jpg, .jpeg, .png, .heic, .heif, or .pdf extension"
+  end
+
+  test "rejects attachments larger than twenty megabytes" do
+    entry = Entry.new(
+      home: homes(:main),
+      created_by_user: users(:owner),
+      entry_type: "replacement",
+      title: "Replaced water heater",
+      occurred_on: Date.current
+    )
+    entry.attachments.attach(
+      io: StringIO.new("x"),
+      filename: "warranty.pdf",
+      content_type: "application/pdf"
+    )
+    entry.attachments.first.blob.byte_size = 20.megabytes + 1
+
+    assert_not entry.valid?
+    assert_includes entry.errors[:attachments], "must be 20 MB or smaller"
+  end
 end

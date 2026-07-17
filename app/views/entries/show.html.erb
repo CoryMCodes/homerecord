@@ -26,4 +26,19 @@
   <% if @entry.contractor_name.present? %>
     <p>Contractor or vendor: <%= @entry.contractor_name %></p>
   <% end %>
+
+  <% if @entry.attachments.attached? %>
+    <section>
+      <h2>Attachments</h2>
+
+      <ul>
+        <% @entry.attachments.each do |attachment| %>
+          <li>
+            <%= link_to attachment.filename.to_s, rails_blob_path(attachment, disposition: "attachment") %>
+            <span><%= number_to_human_size(attachment.byte_size) %></span>
+          </li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
 </section>
