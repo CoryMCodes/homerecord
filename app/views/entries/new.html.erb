@@ -1,0 +1,9 @@
+<% content_for :title, "Add entry" %>
+
+<section>
+  <p><%= link_to "Back to timeline", home_path(@home) %></p>
+
+  <h1>Add entry</h1>
+
+  <%= render "form", home: @home, entry: @entry, items: @items, cost: @cost, submit_label: "Create entry" %>
+</section>

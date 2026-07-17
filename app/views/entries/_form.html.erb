@@ -1,0 +1,50 @@
+<% if entry.errors.any? %>
+  <div role="alert">
+    <p>Please check the entry details.</p>
+
+    <ul>
+      <% entry.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= form_with model: [ home, entry ] do |form| %>
+  <div>
+    <%= form.label :entry_type, "Entry type" %>
+    <%= form.select :entry_type, options_for_select(Entry::ENTRY_TYPES.map { |entry_type| [ entry_type.humanize, entry_type ] }, entry.entry_type), include_blank: true, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :title %>
+    <%= form.text_field :title, required: true, autofocus: true %>
+  </div>
+
+  <div>
+    <%= form.label :occurred_on, "Occurred on" %>
+    <%= form.date_field :occurred_on, required: true %>
+  </div>
+
+  <div>
+    <%= form.label :item_id, "Item" %>
+    <%= form.select :item_id, options_from_collection_for_select(items, :id, :name, entry.item_id), include_blank: "No item" %>
+  </div>
+
+  <div>
+    <%= form.label :description %>
+    <%= form.text_area :description, rows: 4 %>
+  </div>
+
+  <div>
+    <%= form.label :cost, "Cost" %>
+    <%= form.text_field :cost, value: cost, inputmode: "decimal" %>
+  </div>
+
+  <div>
+    <%= form.label :contractor_name, "Contractor or vendor" %>
+    <%= form.text_field :contractor_name %>
+  </div>
+
+  <%= form.submit submit_label %>
+<% end %>
