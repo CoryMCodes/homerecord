@@ -89,6 +89,32 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     assert_equal [ "Replaced water heater", "Moved in" ], timeline_titles
   end
 
+  test "filters timeline entries by entry type" do
+    sign_in_as users(:owner)
+    replacement_filter_path = home_path(homes(:main), entry_type: "replacement")
+
+    get home_url(homes(:main), entry_type: "replacement")
+
+    assert_response :success
+    assert_select "nav[aria-label='Timeline filters'] a[aria-current='page']", "Replacement"
+    replacement_link = css_select("nav[aria-label='Timeline filters'] a").find { |link| link.text.strip == "Replacement" }
+    assert_equal replacement_filter_path, replacement_link["href"]
+    assert_select "ol li", 1
+    assert_select "ol li h3", "Replaced water heater"
+    assert_select "ol li h3", { text: "Moved in", count: 0 }
+  end
+
+  test "ignores unsupported timeline entry type filters" do
+    sign_in_as users(:owner)
+
+    get home_url(homes(:main), entry_type: "reminder")
+
+    assert_response :success
+    assert_select "nav[aria-label='Timeline filters'] a[aria-current='page']", "All"
+    timeline_titles = css_select("ol li h3").map { |title| title.text.strip }
+    assert_equal [ "Replaced water heater", "Moved in" ], timeline_titles
+  end
+
   test "orders timeline entries with a stable newest id tie breaker" do
     sign_in_as users(:owner)
     home = accounts(:household).homes.create!(name: "Same Day Home")
@@ -126,6 +152,7 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
 
   test "timeline renders search and filter controls" do
     sign_in_as users(:owner)
+    replacement_filter_path = home_path(homes(:main), entry_type: "replacement")
 
     get home_url(homes(:main))
 
@@ -134,6 +161,8 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[type='search'][name='q']"
     assert_select "nav[aria-label='Timeline filters']"
     assert_select "nav[aria-label='Timeline filters'] a[aria-current='page']", "All"
+    replacement_link = css_select("nav[aria-label='Timeline filters'] a").find { |link| link.text.strip == "Replacement" }
+    assert_equal replacement_filter_path, replacement_link["href"]
   end
 
   test "timeline links to home scoped items" do
