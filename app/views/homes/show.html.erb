@@ -11,11 +11,13 @@
 
   <h2>Timeline</h2>
 
+  <p><%= link_to "Add entry", new_home_entry_path(@home) %></p>
+
   <% if @timeline_entries.any? %>
     <ol>
       <% @timeline_entries.each do |entry| %>
         <li>
-          <h3><%= entry.title %></h3>
+          <h3><%= link_to entry.title, home_entry_path(@home, entry) %></h3>
           <p><%= entry.occurred_on.to_fs(:long) %></p>
 
           <% if entry.description.present? %>

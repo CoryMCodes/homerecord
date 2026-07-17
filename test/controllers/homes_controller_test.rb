@@ -133,4 +133,23 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href='#{home_items_path(homes(:main))}']", "View items"
     assert_select "a[href='#{new_home_item_path(homes(:main))}']", "Add item"
   end
+
+  test "timeline links to new entry form" do
+    sign_in_as users(:owner)
+
+    get home_url(homes(:main))
+
+    assert_response :success
+    assert_select "a[href='#{new_home_entry_path(homes(:main))}']", "Add entry"
+  end
+
+  test "timeline entry titles link to entry detail pages" do
+    sign_in_as users(:owner)
+    entry = entries(:water_heater_replacement)
+
+    get home_url(homes(:main))
+
+    assert_response :success
+    assert_select "a[href='#{home_entry_path(homes(:main), entry)}']", "Replaced water heater"
+  end
 end
