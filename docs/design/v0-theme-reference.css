@@ -1,0 +1,344 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-foreground: var(--foreground);
+  --color-background: var(--background);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-serif: var(--font-fraunces);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  color-scheme: light;
+  --primary-hover: var(--primary);
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --ring: oklch(0.708 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --radius: 0.625rem;
+  --sidebar: oklch(0.985 0 0);
+  --sidebar-foreground: oklch(0.145 0 0);
+  --sidebar-primary: oklch(0.205 0 0);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.97 0 0);
+  --sidebar-accent-foreground: oklch(0.205 0 0);
+  --sidebar-border: oklch(0.922 0 0);
+  --sidebar-ring: oklch(0.708 0 0);
+}
+
+.dark {
+  color-scheme: dark;
+  --background: oklch(0.145 0 0);
+  --foreground: oklch(0.985 0 0);
+  --card: oklch(0.205 0 0);
+  --card-foreground: oklch(0.985 0 0);
+  --popover: oklch(0.205 0 0);
+  --popover-foreground: oklch(0.985 0 0);
+  --primary: oklch(0.922 0 0);
+  --primary-foreground: oklch(0.205 0 0);
+  --secondary: oklch(0.269 0 0);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.269 0 0);
+  --muted-foreground: oklch(0.708 0 0);
+  --accent: oklch(0.269 0 0);
+  --accent-foreground: oklch(0.985 0 0);
+  --destructive: oklch(0.704 0.191 22.216);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.556 0 0);
+  --chart-1: oklch(0.87 0 0);
+  --chart-2: oklch(0.556 0 0);
+  --chart-3: oklch(0.439 0 0);
+  --chart-4: oklch(0.371 0 0);
+  --chart-5: oklch(0.269 0 0);
+  --sidebar: oklch(0.205 0 0);
+  --sidebar-foreground: oklch(0.985 0 0);
+  --sidebar-primary: oklch(0.488 0.243 264.376);
+  --sidebar-primary-foreground: oklch(0.985 0 0);
+  --sidebar-accent: oklch(0.269 0 0);
+  --sidebar-accent-foreground: oklch(0.985 0 0);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.556 0 0);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    color-scheme: dark;
+    --background: oklch(0.145 0 0);
+    --foreground: oklch(0.985 0 0);
+    --card: oklch(0.205 0 0);
+    --card-foreground: oklch(0.985 0 0);
+    --popover: oklch(0.205 0 0);
+    --popover-foreground: oklch(0.985 0 0);
+    --primary: oklch(0.922 0 0);
+    --primary-foreground: oklch(0.205 0 0);
+    --secondary: oklch(0.269 0 0);
+    --secondary-foreground: oklch(0.985 0 0);
+    --muted: oklch(0.269 0 0);
+    --muted-foreground: oklch(0.708 0 0);
+    --accent: oklch(0.269 0 0);
+    --accent-foreground: oklch(0.985 0 0);
+    --destructive: oklch(0.704 0.191 22.216);
+    --border: oklch(1 0 0 / 10%);
+    --input: oklch(1 0 0 / 15%);
+    --ring: oklch(0.556 0 0);
+    --chart-1: oklch(0.87 0 0);
+    --chart-2: oklch(0.556 0 0);
+    --chart-3: oklch(0.439 0 0);
+    --chart-4: oklch(0.371 0 0);
+    --chart-5: oklch(0.269 0 0);
+    --sidebar: oklch(0.205 0 0);
+    --sidebar-foreground: oklch(0.985 0 0);
+    --sidebar-primary: oklch(0.488 0.243 264.376);
+    --sidebar-primary-foreground: oklch(0.985 0 0);
+    --sidebar-accent: oklch(0.269 0 0);
+    --sidebar-accent-foreground: oklch(0.985 0 0);
+    --sidebar-border: oklch(1 0 0 / 10%);
+    --sidebar-ring: oklch(0.556 0 0);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* ---------- Direction C: Premium modern homeowner app ---------- */
+/* Bright neutral canvas, deep forest ink, soft sage accents, high contrast */
+.theme-warm {
+  --background: #fafbf8;
+  --foreground: #1f2b24;
+  --card: #ffffff;
+  --card-foreground: #1f2b24;
+  --popover: #ffffff;
+  --popover-foreground: #1f2b24;
+  --primary: #356f52;
+  --primary-foreground: #ffffff;
+  --primary-hover: #2e6147;
+  --secondary: #eaf4ee;
+  --secondary-foreground: #1f2b24;
+  --muted: #eaf4ee;
+  --muted-foreground: #66736b;
+  --accent: #eaf4ee;
+  --accent-foreground: #2e6147;
+  --border: #e6ece8;
+  --input: #e6ece8;
+  --ring: #356f52;
+  --radius: 1.25rem;
+}
+
+/*
+ * Direction C palette variations.
+ * Each preserves the exact same token relationships as .theme-warm:
+ *   background  = lightly tinted near-white canvas
+ *   card        = pure white surface
+ *   primary     = brand color (buttons, icon bubbles, timeline accents, active chip tint)
+ *   accent      = softest brand tint (warranty chip)
+ *   border      = subtle tinted hairline
+ *   muted-fg    = desaturated secondary text
+ *   foreground  = high-contrast primary text
+ * Radius, spacing and sizing are inherited from the component — color only.
+ */
+
+/* Theme 1 — Modern Blue (Apple / Linear / Arc / Raycast) */
+.theme-c-blue {
+  --background: #f8fafd;
+  --foreground: #182135;
+  --card: #ffffff;
+  --card-foreground: #182135;
+  --popover: #ffffff;
+  --popover-foreground: #182135;
+  --primary: #0a6cff;
+  --primary-foreground: #ffffff;
+  --primary-hover: #0055d6;
+  --secondary: #e9f1ff;
+  --secondary-foreground: #182135;
+  --muted: #e9f1ff;
+  --muted-foreground: #63708a;
+  --accent: #e9f1ff;
+  --accent-foreground: #0055d6;
+  --border: #e2e8f4;
+  --input: #e2e8f4;
+  --ring: #0a6cff;
+  --radius: 1.25rem;
+}
+
+/* Theme 2 — Terracotta (clay, walnut, sandstone, copper) */
+.theme-c-terracotta {
+  --background: #fbf8f4;
+  --foreground: #2b201a;
+  --card: #ffffff;
+  --card-foreground: #2b201a;
+  --popover: #ffffff;
+  --popover-foreground: #2b201a;
+  --primary: #b4552d;
+  --primary-foreground: #ffffff;
+  --primary-hover: #984624;
+  --secondary: #f5e9e0;
+  --secondary-foreground: #2b201a;
+  --muted: #f5e9e0;
+  --muted-foreground: #7c6c62;
+  --accent: #f5e9e0;
+  --accent-foreground: #984624;
+  --border: #ecdfd5;
+  --input: #ecdfd5;
+  --ring: #b4552d;
+  --radius: 1.25rem;
+}
+
+/* Theme 3 — Slate (charcoal, graphite, stone, soft silver) */
+.theme-c-slate {
+  --background: #fafafb;
+  --foreground: #1e2226;
+  --card: #ffffff;
+  --card-foreground: #1e2226;
+  --popover: #ffffff;
+  --popover-foreground: #1e2226;
+  --primary: #3a4149;
+  --primary-foreground: #ffffff;
+  --primary-hover: #2b3137;
+  --secondary: #eef0f2;
+  --secondary-foreground: #1e2226;
+  --muted: #eef0f2;
+  --muted-foreground: #6b7178;
+  --accent: #eef0f2;
+  --accent-foreground: #2b3137;
+  --border: #e5e8ea;
+  --input: #e5e8ea;
+  --ring: #3a4149;
+  --radius: 1.25rem;
+}
+
+/* Theme 4 — Deep Teal (rich teal, soft blue-gray neutrals) */
+.theme-c-teal {
+  --background: #f6fafa;
+  --foreground: #142629;
+  --card: #ffffff;
+  --card-foreground: #142629;
+  --popover: #ffffff;
+  --popover-foreground: #142629;
+  --primary: #0f766e;
+  --primary-foreground: #ffffff;
+  --primary-hover: #0b5a54;
+  --secondary: #e2f0ef;
+  --secondary-foreground: #142629;
+  --muted: #e2f0ef;
+  --muted-foreground: #607072;
+  --accent: #e2f0ef;
+  --accent-foreground: #0b5a54;
+  --border: #dbe8e7;
+  --input: #dbe8e7;
+  --ring: #0f766e;
+  --radius: 1.25rem;
+}
+
+/* Theme 5 — Forest (deep cool evergreen + warm stone neutrals) */
+/* Cedar / Patagonia / Apple Home. Surfaces read as warm stone, not green. */
+.theme-c-forest {
+  --background: #f5f5f1;
+  --foreground: #14231c;
+  --card: #ffffff;
+  --card-foreground: #14231c;
+  --popover: #ffffff;
+  --popover-foreground: #14231c;
+  --primary: #124a37;
+  --primary-foreground: #ffffff;
+  --primary-hover: #0d3b2c;
+  --secondary: #ebeae3;
+  --secondary-foreground: #14231c;
+  --muted: #edece6;
+  --muted-foreground: #5c625b;
+  --accent: #dfe9e1;
+  --accent-foreground: #0d3b2c;
+  --border: #e4e2da;
+  --input: #e4e2da;
+  --ring: #124a37;
+  --radius: 1.25rem;
+}
+
+/* Theme 6 — Burgundy (deep wine accents, warm neutrals) */
+.theme-c-burgundy {
+  --background: #fbf8f8;
+  --foreground: #281a1e;
+  --card: #ffffff;
+  --card-foreground: #281a1e;
+  --popover: #ffffff;
+  --popover-foreground: #281a1e;
+  --primary: #7e2b3b;
+  --primary-foreground: #ffffff;
+  --primary-hover: #66222f;
+  --secondary: #f4e7ea;
+  --secondary-foreground: #281a1e;
+  --muted: #f4e7ea;
+  --muted-foreground: #766369;
+  --accent: #f4e7ea;
+  --accent-foreground: #66222f;
+  --border: #ecdfe1;
+  --input: #ecdfe1;
+  --ring: #7e2b3b;
+  --radius: 1.25rem;
+}

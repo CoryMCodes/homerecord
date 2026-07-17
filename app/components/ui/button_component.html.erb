@@ -1,0 +1,9 @@
+<% if href.present? %>
+  <%= link_to href, class: classes, aria: ({ disabled: true } if disabled) do %>
+    <%= content %>
+  <% end %>
+<% else %>
+  <button type="<%= type %>" class="<%= classes %>" <%= "disabled" if disabled %>>
+    <%= content %>
+  </button>
+<% end %>
