@@ -65,7 +65,7 @@ class EntriesController < ApplicationController
 
   def normalized_cost_cents
     dollars = BigDecimal(submitted_cost)
-    raise ArgumentError if dollars.negative?
+    raise ArgumentError unless dollars.finite? && dollars >= 0
 
     (dollars * 100).round.to_i
   end

@@ -142,6 +142,44 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[name='entry[cost]'][value='-12.00']"
   end
 
+  test "does not create an entry with NaN cost" do
+    sign_in_as users(:owner)
+
+    assert_no_difference -> { Entry.count } do
+      post home_entries_url(homes(:main)), params: {
+        entry: {
+          entry_type: "repair",
+          title: "Fixed sink leak",
+          occurred_on: "2026-07-10",
+          cost: "NaN"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "[role='alert']", /Cost must be a valid dollar amount/
+    assert_select "input[name='entry[cost]'][value='NaN']"
+  end
+
+  test "does not create an entry with Infinity cost" do
+    sign_in_as users(:owner)
+
+    assert_no_difference -> { Entry.count } do
+      post home_entries_url(homes(:main)), params: {
+        entry: {
+          entry_type: "repair",
+          title: "Fixed sink leak",
+          occurred_on: "2026-07-10",
+          cost: "Infinity"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "[role='alert']", /Cost must be a valid dollar amount/
+    assert_select "input[name='entry[cost]'][value='Infinity']"
+  end
+
   test "does not create an entry with an item from another home" do
     sign_in_as users(:owner)
 
