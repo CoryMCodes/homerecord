@@ -1,5 +1,6 @@
 class EntriesController < ApplicationController
   before_action :set_home
+  before_action :set_entry, only: %i[show]
   before_action :set_items, only: %i[new create]
 
   def new
@@ -21,10 +22,17 @@ class EntriesController < ApplicationController
     end
   end
 
+  def show
+  end
+
   private
 
   def set_home
     @home = current_account.homes.find(params[:home_id])
+  end
+
+  def set_entry
+    @entry = @home.entries.find(params[:id])
   end
 
   def set_items

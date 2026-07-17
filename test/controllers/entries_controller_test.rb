@@ -197,4 +197,57 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_select "[role='alert']", /Item must belong to this home/
   end
+
+  test "shows an entry detail page" do
+    sign_in_as users(:owner)
+    entry = entries(:water_heater_replacement)
+
+    get home_entry_url(homes(:main), entry)
+
+    assert_response :success
+    assert_select "a[href='#{home_path(homes(:main))}']", "Back to timeline"
+    assert_select "h1", "Replaced water heater"
+    assert_select "p", /Replacement/
+    assert_select "p", /January 15, 2024/
+    assert_select "a[href='#{home_item_path(homes(:main), items(:water_heater))}']", "Water Heater"
+    assert_select "p", /Replaced the failing tank water heater./
+    assert_select "p", /1,800.00/
+    assert_select "p", /Reliable Plumbing/
+  end
+
+  test "shows an entry detail page without optional fields" do
+    sign_in_as users(:owner)
+    entry = entries(:move_in)
+
+    get home_entry_url(homes(:main), entry)
+
+    assert_response :success
+    assert_select "h1", "Moved in"
+    assert_select "a[href^='#{home_items_path(homes(:main))}/']", 0
+    assert_select "p", text: /Cost/, count: 0
+    assert_select "p", text: /Contractor or vendor/, count: 0
+  end
+
+  test "does not show an entry from another home" do
+    sign_in_as users(:owner)
+    second_home = accounts(:household).homes.create!(name: "Second Home")
+    entry = second_home.entries.create!(
+      entry_type: "note",
+      title: "Second home note",
+      occurred_on: Date.new(2026, 7, 12),
+      created_by_user: users(:owner)
+    )
+
+    get home_entry_url(homes(:main), entry)
+
+    assert_response :not_found
+  end
+
+  test "does not show an entry when the nested home is outside the current account" do
+    sign_in_as users(:owner)
+
+    get home_entry_url(homes(:other), entries(:water_heater_replacement))
+
+    assert_response :not_found
+  end
 end

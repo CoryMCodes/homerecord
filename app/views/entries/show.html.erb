@@ -1,0 +1,29 @@
+<% content_for :title, @entry.title %>
+
+<section>
+  <p><%= link_to "Back to timeline", home_path(@home) %></p>
+
+  <h1><%= @entry.title %></h1>
+
+  <p><%= @entry.entry_type.humanize %></p>
+  <p><%= @entry.occurred_on.to_fs(:long) %></p>
+
+  <% if @entry.item.present? %>
+    <p>
+      Item:
+      <%= link_to @entry.item.name, home_item_path(@home, @entry.item) %>
+    </p>
+  <% end %>
+
+  <% if @entry.description.present? %>
+    <p><%= @entry.description %></p>
+  <% end %>
+
+  <% if @entry.cost_cents.present? %>
+    <p>Cost: <%= number_to_currency(@entry.cost_cents / 100.0) %></p>
+  <% end %>
+
+  <% if @entry.contractor_name.present? %>
+    <p>Contractor or vendor: <%= @entry.contractor_name %></p>
+  <% end %>
+</section>
