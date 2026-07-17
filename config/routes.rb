@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
   resources :homes, only: %i[index new create show] do
+    resource :search, only: :show
     resources :items, only: %i[index new create show edit update]
     resources :entries, only: %i[new create show]
   end

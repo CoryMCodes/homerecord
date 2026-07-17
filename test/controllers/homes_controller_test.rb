@@ -157,8 +157,9 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     get home_url(homes(:main))
 
     assert_response :success
-    assert_select "form[role='search']"
+    assert_select "form[role='search'][action='#{home_search_path(homes(:main))}'][data-turbo-frame='home_search_results']"
     assert_select "input[type='search'][name='q']"
+    assert_select "turbo-frame#home_search_results"
     assert_select "nav[aria-label='Timeline filters']"
     assert_select "nav[aria-label='Timeline filters'] a[aria-current='page']", "All"
     replacement_link = css_select("nav[aria-label='Timeline filters'] a").find { |link| link.text.strip == "Replacement" }

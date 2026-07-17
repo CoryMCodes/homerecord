@@ -1,0 +1,59 @@
+<%= turbo_frame_tag "home_search_results" do %>
+  <% if results.query.present? %>
+    <div class="rounded-2xl border border-border bg-card shadow-floating">
+      <% if results.any? %>
+        <div class="max-h-96 overflow-y-auto py-2">
+          <% if results.entries.any? %>
+            <section class="py-2" aria-labelledby="home-search-entries-heading">
+              <h2 id="home-search-entries-heading" class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Entries</h2>
+              <ul class="mt-1 divide-y divide-border">
+                <% results.entries.each do |entry| %>
+                  <li>
+                    <%= link_to home_entry_path(home, entry), class: "block px-4 py-3 transition-colors hover:bg-secondary focus-visible:bg-secondary focus-visible:outline-none" do %>
+                      <span class="block text-sm font-semibold text-foreground"><%= entry.title %></span>
+                      <span class="mt-1 block text-xs text-muted-foreground"><%= entry.entry_type.humanize %> · <%= entry.occurred_on.to_fs(:long) %></span>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </section>
+          <% end %>
+
+          <% if results.items.any? %>
+            <section class="py-2" aria-labelledby="home-search-items-heading">
+              <h2 id="home-search-items-heading" class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Items</h2>
+              <ul class="mt-1 divide-y divide-border">
+                <% results.items.each do |item| %>
+                  <li>
+                    <%= link_to home_item_path(home, item), class: "block px-4 py-3 transition-colors hover:bg-secondary focus-visible:bg-secondary focus-visible:outline-none" do %>
+                      <span class="block text-sm font-semibold text-foreground"><%= item.name %></span>
+                      <span class="mt-1 block text-xs text-muted-foreground"><%= [ item.item_kind.humanize, item.brand, item.model_number ].compact_blank.join(" · ") %></span>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </section>
+          <% end %>
+
+          <% if results.attachment_matches.any? %>
+            <section class="py-2" aria-labelledby="home-search-attachments-heading">
+              <h2 id="home-search-attachments-heading" class="px-4 text-xs font-semibold uppercase tracking-wide text-muted-foreground">Attachments</h2>
+              <ul class="mt-1 divide-y divide-border">
+                <% results.attachment_matches.each do |match| %>
+                  <li>
+                    <%= link_to home_entry_path(home, match.entry), class: "block px-4 py-3 transition-colors hover:bg-secondary focus-visible:bg-secondary focus-visible:outline-none" do %>
+                      <span class="block text-sm font-semibold text-foreground"><%= match.filename %></span>
+                      <span class="mt-1 block text-xs text-muted-foreground"><%= match.entry.title %></span>
+                    <% end %>
+                  </li>
+                <% end %>
+              </ul>
+            </section>
+          <% end %>
+        </div>
+      <% else %>
+        <p class="px-4 py-5 text-sm text-muted-foreground">No results found.</p>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>
