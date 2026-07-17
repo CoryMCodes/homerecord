@@ -16,14 +16,7 @@
 
   <%= render(Ui::FilterNavComponent.new(
     label: "Timeline filters",
-    items: [
-      { label: "All", href: home_path(@home), active: true },
-      { label: "Maintenance", href: home_path(@home, category: "maintenance"), active: false },
-      { label: "Appliance", href: home_path(@home, category: "appliance"), active: false },
-      { label: "Document", href: home_path(@home, category: "document"), active: false },
-      { label: "Warranty", href: home_path(@home, category: "warranty"), active: false },
-      { label: "Improvement", href: home_path(@home, category: "improvement"), active: false }
-    ]
+    items: @timeline_filter_items
   )) %>
 
   <%= render(Entries::TimelineComponent.new(entries: @timeline_entries, home: @home)) %>
