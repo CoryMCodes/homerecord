@@ -1,6 +1,13 @@
 require "test_helper"
 
 class RegistrationDefaultAccountTest < ActionDispatch::IntegrationTest
+  test "signup page links existing users to sign in" do
+    get root_url
+
+    assert_response :success
+    assert_select "a[href=?]", new_session_path, text: "Sign in to your account"
+  end
+
   test "signup creates default account and owner membership" do
     assert_difference -> { User.count }, 1 do
       assert_difference -> { Account.count }, 1 do
