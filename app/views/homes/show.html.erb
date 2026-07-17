@@ -8,13 +8,13 @@
     items_count: @home.items.size,
     last_activity_label: (@timeline_entries.first&.occurred_on&.strftime("%b %-d") || "None") %>
 
-  <%= render Ui::SearchFieldComponent.new(
+  <%= render(Ui::SearchFieldComponent.new(
     url: home_path(@home),
     value: params[:q],
     placeholder: "Find an appliance manual..."
-  ) %>
+  )) %>
 
-  <%= render Ui::FilterNavComponent.new(
+  <%= render(Ui::FilterNavComponent.new(
     label: "Timeline filters",
     items: [
       { label: "All", href: home_path(@home), active: true },
@@ -24,23 +24,23 @@
       { label: "Warranty", href: home_path(@home, category: "warranty"), active: false },
       { label: "Improvement", href: home_path(@home, category: "improvement"), active: false }
     ]
-  ) %>
+  )) %>
 
-  <%= render Entries::TimelineComponent.new(entries: @timeline_entries, home: @home) %>
+  <%= render(Entries::TimelineComponent.new(entries: @timeline_entries, home: @home)) %>
 
   <nav aria-label="Home item actions" class="mt-8 flex flex-wrap gap-3">
-    <%= render Ui::ButtonComponent.new(href: home_items_path(@home), variant: :secondary) do %>
+    <%= render(Ui::ButtonComponent.new(href: home_items_path(@home), variant: :secondary)) do %>
       View items
     <% end %>
 
-    <%= render Ui::ButtonComponent.new(href: new_home_item_path(@home), variant: :ghost) do %>
+    <%= render(Ui::ButtonComponent.new(href: new_home_item_path(@home), variant: :ghost)) do %>
       Add item
     <% end %>
 
-    <%= render Ui::ButtonComponent.new(href: new_home_entry_path(@home), variant: :ghost) do %>
+    <%= render(Ui::ButtonComponent.new(href: new_home_entry_path(@home), variant: :ghost)) do %>
       Add entry
     <% end %>
   </nav>
 
-  <%= render Ui::FloatingActionComponent.new(href: new_home_entry_path(@home), label: "Add entry") %>
+  <%= render(Ui::FloatingActionComponent.new(href: new_home_entry_path(@home), label: "Add entry")) %>
 </section>

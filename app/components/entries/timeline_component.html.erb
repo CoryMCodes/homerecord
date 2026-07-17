@@ -10,7 +10,7 @@
           <span class="absolute bottom-8 left-[23px] top-8 w-px bg-border" aria-hidden="true"></span>
           <ol class="space-y-1">
             <% grouped_entries.each do |entry| %>
-              <%= render Entries::TimelineEntryComponent.new(entry: entry) %>
+              <%= render(Entries::TimelineEntryComponent.new(entry: entry)) %>
             <% end %>
           </ol>
         </div>
@@ -18,7 +18,7 @@
     <% end %>
   <% else %>
     <div class="mt-4">
-      <%= render Ui::EmptyStateComponent.new(title: "No timeline entries yet.", body: "Add the first record for #{home.name}.") %>
+      <%= render(Ui::EmptyStateComponent.new(title: "No timeline entries yet.", body: "Add the first record for #{home.name}.")) %>
     </div>
   <% end %>
 </section>
