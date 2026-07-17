@@ -1,0 +1,24 @@
+<section class="mt-9" aria-labelledby="timeline-heading">
+  <h2 id="timeline-heading" class="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground">Timeline</h2>
+
+  <% if entries.any? %>
+    <% groups.each do |label, grouped_entries| %>
+      <section class="mt-4" aria-label="<%= label %>">
+        <h3 class="sticky top-0 z-10 -mx-5 bg-background/80 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground backdrop-blur-md"><%= label %></h3>
+
+        <div class="relative">
+          <span class="absolute bottom-8 left-[23px] top-8 w-px bg-border" aria-hidden="true"></span>
+          <ol class="space-y-1">
+            <% grouped_entries.each do |entry| %>
+              <%= render Entries::TimelineEntryComponent.new(entry: entry) %>
+            <% end %>
+          </ol>
+        </div>
+      </section>
+    <% end %>
+  <% else %>
+    <div class="mt-4">
+      <%= render Ui::EmptyStateComponent.new(title: "No timeline entries yet.", body: "Add the first record for #{home.name}.") %>
+    </div>
+  <% end %>
+</section>

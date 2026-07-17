@@ -1,0 +1,13 @@
+<section class="rounded-2xl border border-border bg-card px-5 py-8 text-center shadow-card">
+  <h2 class="text-lg font-semibold text-foreground"><%= title %></h2>
+
+  <% if body.present? %>
+    <p class="mt-2 text-sm leading-relaxed text-muted-foreground"><%= body %></p>
+  <% end %>
+
+  <% if content.present? %>
+    <div class="mt-5 flex justify-center">
+      <%= content %>
+    </div>
+  <% end %>
+</section>

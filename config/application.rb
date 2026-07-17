@@ -23,5 +23,7 @@ module HouseOs
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.view_component.generate.sidecar = true
+    config.view_component.parent_class = "ApplicationComponent"
   end
 end

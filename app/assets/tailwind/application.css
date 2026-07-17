@@ -1,1 +1,175 @@
 @import "tailwindcss";
+@source not "../../../docs/design";
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-text);
+  --color-card: var(--color-surface);
+  --color-card-foreground: var(--color-text);
+  --color-popover: var(--color-surface);
+  --color-popover-foreground: var(--color-text);
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-foreground: var(--color-primary-foreground);
+  --color-primary-soft: var(--color-primary-soft);
+  --color-secondary: var(--color-secondary);
+  --color-secondary-foreground: var(--color-text);
+  --color-muted: var(--color-muted);
+  --color-muted-foreground: var(--color-text-muted);
+  --color-accent: var(--color-accent);
+  --color-accent-foreground: var(--color-accent-foreground);
+  --color-border: var(--color-border);
+  --color-input: var(--color-input);
+  --color-ring: var(--color-ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --shadow-card: var(--shadow-card);
+  --shadow-floating: var(--shadow-floating);
+}
+
+:root,
+[data-theme="forest"] {
+  color-scheme: light;
+  --color-background: #f5f5f1;
+  --color-text: #14231c;
+  --color-surface: #ffffff;
+  --color-primary: #124a37;
+  --color-primary-hover: #0d3b2c;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: #dfe9e1;
+  --color-secondary: #ebeae3;
+  --color-muted: #edece6;
+  --color-text-muted: #5c625b;
+  --color-accent: #dfe9e1;
+  --color-accent-foreground: #0d3b2c;
+  --color-border: #e4e2da;
+  --color-input: #e4e2da;
+  --color-ring: #124a37;
+  --focus-ring: color-mix(in srgb, var(--color-ring) 38%, transparent);
+  --shadow-card: 0 1px 2px rgba(20, 35, 28, 0.04), 0 10px 30px -16px rgba(20, 35, 28, 0.2);
+  --shadow-floating: 0 8px 28px -8px rgba(18, 74, 55, 0.5);
+  --radius: 1.25rem;
+  --app-content-width: 32.5rem;
+}
+
+[data-theme="warm"] {
+  --color-background: #fafbf8;
+  --color-text: #1f2b24;
+  --color-surface: #ffffff;
+  --color-primary: #356f52;
+  --color-primary-hover: #2e6147;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: #eaf4ee;
+  --color-secondary: #eaf4ee;
+  --color-muted: #eaf4ee;
+  --color-text-muted: #66736b;
+  --color-accent: #eaf4ee;
+  --color-accent-foreground: #2e6147;
+  --color-border: #e6ece8;
+  --color-input: #e6ece8;
+  --color-ring: #356f52;
+}
+
+[data-theme="blue"] {
+  --color-background: #f8fafd;
+  --color-text: #182135;
+  --color-surface: #ffffff;
+  --color-primary: #0a6cff;
+  --color-primary-hover: #0055d6;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: #e9f1ff;
+  --color-secondary: #e9f1ff;
+  --color-muted: #e9f1ff;
+  --color-text-muted: #63708a;
+  --color-accent: #e9f1ff;
+  --color-accent-foreground: #0055d6;
+  --color-border: #e2e8f4;
+  --color-input: #e2e8f4;
+  --color-ring: #0a6cff;
+}
+
+[data-theme="terracotta"] {
+  --color-background: #fbf8f4;
+  --color-text: #2b201a;
+  --color-surface: #ffffff;
+  --color-primary: #b4552d;
+  --color-primary-hover: #984624;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: #f5e9e0;
+  --color-secondary: #f5e9e0;
+  --color-muted: #f5e9e0;
+  --color-text-muted: #7c6c62;
+  --color-accent: #f5e9e0;
+  --color-accent-foreground: #984624;
+  --color-border: #ecdfd5;
+  --color-input: #ecdfd5;
+  --color-ring: #b4552d;
+}
+
+[data-theme="slate"] {
+  --color-background: #fafafb;
+  --color-text: #1e2226;
+  --color-surface: #ffffff;
+  --color-primary: #3a4149;
+  --color-primary-hover: #2b3137;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: #eef0f2;
+  --color-secondary: #eef0f2;
+  --color-muted: #eef0f2;
+  --color-text-muted: #6b7178;
+  --color-accent: #eef0f2;
+  --color-accent-foreground: #2b3137;
+  --color-border: #e5e8ea;
+  --color-input: #e5e8ea;
+  --color-ring: #3a4149;
+}
+
+[data-theme="teal"] {
+  --color-background: #f6fafa;
+  --color-text: #142629;
+  --color-surface: #ffffff;
+  --color-primary: #0f766e;
+  --color-primary-hover: #0b5a54;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: #e2f0ef;
+  --color-secondary: #e2f0ef;
+  --color-muted: #e2f0ef;
+  --color-text-muted: #607072;
+  --color-accent: #e2f0ef;
+  --color-accent-foreground: #0b5a54;
+  --color-border: #dbe8e7;
+  --color-input: #dbe8e7;
+  --color-ring: #0f766e;
+}
+
+[data-theme="burgundy"] {
+  --color-background: #fbf8f8;
+  --color-text: #281a1e;
+  --color-surface: #ffffff;
+  --color-primary: #7e2b3b;
+  --color-primary-hover: #66222f;
+  --color-primary-foreground: #ffffff;
+  --color-primary-soft: #f4e7ea;
+  --color-secondary: #f4e7ea;
+  --color-muted: #f4e7ea;
+  --color-text-muted: #766369;
+  --color-accent: #f4e7ea;
+  --color-accent-foreground: #66222f;
+  --color-border: #ecdfe1;
+  --color-input: #ecdfe1;
+  --color-ring: #7e2b3b;
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--focus-ring);
+    outline-offset: 3px;
+  }
+}

@@ -85,7 +85,7 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     assert_select "h2", "Timeline"
     assert_select "ol li", 2
 
-    timeline_titles = css_select("ol li h3").map(&:text)
+    timeline_titles = css_select("ol li h3").map { |title| title.text.strip }
     assert_equal [ "Replaced water heater", "Moved in" ], timeline_titles
   end
 
@@ -108,7 +108,7 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     get home_url(home)
 
     assert_response :success
-    timeline_titles = css_select("ol li h3").map(&:text)
+    timeline_titles = css_select("ol li h3").map { |title| title.text.strip }
     assert_equal [ newer_entry.title, older_entry.title ], timeline_titles
   end
 
@@ -120,8 +120,20 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h2", "Timeline"
-    assert_select "p", "No timeline entries yet."
+    assert_select "section h2", "No timeline entries yet."
     assert_select "ol li", 0
+  end
+
+  test "timeline renders search and filter controls" do
+    sign_in_as users(:owner)
+
+    get home_url(homes(:main))
+
+    assert_response :success
+    assert_select "form[role='search']"
+    assert_select "input[type='search'][name='q']"
+    assert_select "nav[aria-label='Timeline filters']"
+    assert_select "nav[aria-label='Timeline filters'] a[aria-current='page']", "All"
   end
 
   test "timeline links to home scoped items" do
