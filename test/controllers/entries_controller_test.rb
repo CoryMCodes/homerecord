@@ -142,6 +142,44 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
     assert_select "input[name='entry[cost]'][value='-12.00']"
   end
 
+  test "does not create an entry with a cost above the database integer limit" do
+    sign_in_as users(:owner)
+
+    assert_no_difference -> { Entry.count } do
+      post home_entries_url(homes(:main)), params: {
+        entry: {
+          entry_type: "repair",
+          title: "Fixed sink leak",
+          occurred_on: "2026-07-10",
+          cost: "21474836.48"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "[role='alert']", /Cost must be a valid dollar amount/
+    assert_select "input[name='entry[cost]'][value='21474836.48']"
+  end
+
+  test "does not create an entry with an extreme exponent cost" do
+    sign_in_as users(:owner)
+
+    assert_no_difference -> { Entry.count } do
+      post home_entries_url(homes(:main)), params: {
+        entry: {
+          entry_type: "repair",
+          title: "Fixed sink leak",
+          occurred_on: "2026-07-10",
+          cost: "1e1000000000"
+        }
+      }
+    end
+
+    assert_response :unprocessable_entity
+    assert_select "[role='alert']", /Cost must be a valid dollar amount/
+    assert_select "input[name='entry[cost]'][value='1e1000000000']"
+  end
+
   test "does not create an entry with NaN cost" do
     sign_in_as users(:owner)
 
@@ -196,6 +234,22 @@ class EntriesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :unprocessable_entity
     assert_select "[role='alert']", /Item must belong to this home/
+  end
+
+  test "does not create an entry for a home outside the current account" do
+    sign_in_as users(:owner)
+
+    assert_no_difference -> { Entry.count } do
+      post home_entries_url(homes(:other)), params: {
+        entry: {
+          entry_type: "repair",
+          title: "Fixed sink leak",
+          occurred_on: "2026-07-10"
+        }
+      }
+    end
+
+    assert_response :not_found
   end
 
   test "shows an entry detail page" do

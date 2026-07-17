@@ -80,4 +80,18 @@ class EntryTest < ActiveSupport::TestCase
     assert_not entry.valid?
     assert_includes entry.errors[:cost_cents], "must be greater than or equal to 0"
   end
+
+  test "rejects a cost above the database integer limit" do
+    entry = Entry.new(
+      home: homes(:main),
+      created_by_user: users(:owner),
+      entry_type: "repair",
+      title: "Garage door repair",
+      occurred_on: Date.current,
+      cost_cents: Entry::MAX_COST_CENTS + 1
+    )
+
+    assert_not entry.valid?
+    assert_includes entry.errors[:cost_cents], "must be less than or equal to #{Entry::MAX_COST_CENTS}"
+  end
 end

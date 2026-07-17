@@ -1,5 +1,6 @@
 class Entry < ApplicationRecord
   ENTRY_TYPES = %w[maintenance repair installation replacement inspection purchase note memory].freeze
+  MAX_COST_CENTS = 2_147_483_647
 
   belongs_to :home
   belongs_to :item, optional: true
@@ -8,7 +9,7 @@ class Entry < ApplicationRecord
   validates :entry_type, inclusion: { in: ENTRY_TYPES }
   validates :title, presence: true
   validates :occurred_on, presence: true
-  validates :cost_cents, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+  validates :cost_cents, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: MAX_COST_CENTS }, allow_nil: true
   validate :item_belongs_to_home
 
   private

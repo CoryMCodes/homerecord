@@ -72,9 +72,28 @@ class EntriesController < ApplicationController
   end
 
   def normalized_cost_cents
+    raise ArgumentError if scientific_cost_exceeds_maximum?
+
     dollars = BigDecimal(submitted_cost)
     raise ArgumentError unless dollars.finite? && dollars >= 0
+    raise ArgumentError if dollars >= maximum_cost_dollars
 
     (dollars * 100).round.to_i
+  end
+
+  def maximum_cost_dollars
+    (BigDecimal(Entry::MAX_COST_CENTS.to_s) + BigDecimal("0.5")) / 100
+  end
+
+  def scientific_cost_exceeds_maximum?
+    match = /\A[+-]?(?<coefficient>(?:\d+(?:\.\d*)?|\.\d+))[eE]\+?(?<exponent>\d+)\z/.match(submitted_cost)
+    return false if match.blank? || !match[:coefficient].match?(/[1-9]/)
+
+    exponent = match[:exponent].sub(/\A0+/, "")
+    return false if exponent.blank?
+
+    maximum_exponent = (match[:coefficient].split(".").last.to_s.length + 8).to_s
+    exponent.length > maximum_exponent.length ||
+      (exponent.length == maximum_exponent.length && exponent >= maximum_exponent)
   end
 end
