@@ -46,5 +46,10 @@
     <%= form.text_field :contractor_name %>
   </div>
 
+  <div>
+    <%= form.label :attachments, "Files and photos" %>
+    <%= form.file_field :attachments, multiple: true, accept: ".jpg,.jpeg,.png,.heic,.heif,.pdf,image/jpeg,image/png,image/heic,image/heif,application/pdf" %>
+  </div>
+
   <%= form.submit submit_label %>
 <% end %>

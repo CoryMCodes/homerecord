@@ -40,7 +40,7 @@ class EntriesController < ApplicationController
   end
 
   def entry_params
-    params.require(:entry).permit(:entry_type, :title, :occurred_on, :description, :contractor_name)
+    params.require(:entry).permit(:entry_type, :title, :occurred_on, :description, :contractor_name, attachments: [])
   end
 
   def submitted_item_id
