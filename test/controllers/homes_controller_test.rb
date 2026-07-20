@@ -1,6 +1,35 @@
 require "test_helper"
 
 class HomesControllerTest < ActionDispatch::IntegrationTest
+  test "index redirects to the current home's timeline" do
+    sign_in_as users(:owner)
+
+    get homes_url
+
+    assert_redirected_to home_url(homes(:main))
+  end
+
+  test "index redirects to home creation when the account has no home" do
+    user = User.create_with_default_account!(
+      email_address: "homeless@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    sign_in_as user
+
+    get homes_url
+
+    assert_redirected_to new_home_url
+  end
+
+  test "new redirects to the timeline when the account already has a home" do
+    sign_in_as users(:owner)
+
+    get new_home_url
+
+    assert_redirected_to home_url(homes(:main))
+  end
+
   test "shows a home in the current account" do
     sign_in_as users(:owner)
 
@@ -8,6 +37,8 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", "Main Home"
+    assert_select "a[href='#{home_path(homes(:main))}']", "Timeline"
+    assert_select "a[href='#{homes_path}']", count: 0
   end
 
   test "does not show a home from another account" do
@@ -19,7 +50,12 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "shows the new home form" do
-    sign_in_as users(:owner)
+    user = User.create_with_default_account!(
+      email_address: "new-home-form@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    sign_in_as user
 
     get new_home_url
 
@@ -32,7 +68,12 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "creates a home in the current account and redirects to its timeline" do
-    sign_in_as users(:owner)
+    user = User.create_with_default_account!(
+      email_address: "first-home@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    sign_in_as user
 
     assert_difference -> { Home.count }, 1 do
       post homes_url, params: {
@@ -46,7 +87,7 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     end
 
     home = Home.order(:created_at).last
-    assert_equal accounts(:household), home.account
+    assert_equal user.accounts.first, home.account
     assert_equal "Lake House", home.name
     assert_equal "9 Lake Road", home.address
     assert_equal "house", home.home_type
@@ -59,7 +100,12 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "does not create an invalid home" do
-    sign_in_as users(:owner)
+    user = User.create_with_default_account!(
+      email_address: "invalid-home@example.com",
+      password: "password",
+      password_confirmation: "password"
+    )
+    sign_in_as user
 
     assert_no_difference -> { Home.count } do
       post homes_url, params: {
@@ -74,6 +120,18 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_select "h1", "Add a home"
     assert_select "[role='alert']", /Name can't be blank/
+  end
+
+  test "does not create a second home" do
+    sign_in_as users(:owner)
+
+    assert_no_difference -> { Home.count } do
+      post homes_url, params: {
+        home: { name: "Lake House", address: "9 Lake Road", home_type: "house" }
+      }
+    end
+
+    assert_redirected_to home_url(homes(:main))
   end
 
   test "shows timeline entries newest first" do

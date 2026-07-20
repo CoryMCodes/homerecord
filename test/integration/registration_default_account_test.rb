@@ -28,6 +28,10 @@ class RegistrationDefaultAccountTest < ActionDispatch::IntegrationTest
     assert_redirected_to homes_url
     assert_equal [ "My household" ], user.accounts.pluck(:name)
     assert_equal [ "owner" ], user.memberships.pluck(:role)
+
+    follow_redirect!
+
+    assert_redirected_to new_home_url
   end
 
   test "signup rejects blank email without creating account records" do
