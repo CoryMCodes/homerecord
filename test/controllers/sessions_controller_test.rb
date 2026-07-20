@@ -8,11 +8,20 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "create with valid credentials" do
+  test "create with valid credentials redirects to the homes landing route" do
     post session_path, params: { email_address: @user.email_address, password: "password" }
 
-    assert_redirected_to rails_health_check_url
+    assert_redirected_to homes_url
     assert cookies[:session_id]
+  end
+
+  test "create returns to a protected page requested before authentication" do
+    get home_url(homes(:main))
+    assert_redirected_to new_session_path
+
+    post session_path, params: { email_address: users(:owner).email_address, password: "password" }
+
+    assert_redirected_to home_url(homes(:main))
   end
 
   test "create with invalid credentials" do
