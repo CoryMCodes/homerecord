@@ -1,7 +1,7 @@
-<%= form_with url: url, method: :get, html: { role: "search", class: "mt-8" }, local: true do |form| %>
+<%= form_with url: url, method: :get, html: form_html_options, local: true do |form| %>
   <label class="group flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3.5 shadow-card transition-all focus-within:border-primary focus-within:shadow-floating motion-reduce:transition-none">
     <span aria-hidden="true" class="text-xl leading-none text-muted-foreground transition-colors group-focus-within:text-primary motion-reduce:transition-none">⌕</span>
     <span class="sr-only"><%= label %></span>
-    <%= form.search_field query_param, value: value, placeholder: placeholder, class: "w-full bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground" %>
+    <%= form.search_field query_param, value: value, placeholder: placeholder, autocomplete: autocomplete, data: input_data, class: "w-full bg-transparent text-base text-foreground outline-none placeholder:text-muted-foreground" %>
   </label>
 <% end %>

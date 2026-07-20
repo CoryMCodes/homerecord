@@ -8,11 +8,23 @@
     items_count: @home.items.size,
     last_activity_label: (@timeline_entries.first&.occurred_on&.strftime("%b %-d") || "None") %>
 
-  <%= render(Ui::SearchFieldComponent.new(
-    url: home_path(@home),
-    value: params[:q],
-    placeholder: "Find an appliance manual..."
-  )) %>
+  <div class="relative z-20" data-controller="search-panel" data-action="keydown.esc->search-panel#close click@window->search-panel#closeOnOutsideClick">
+    <%= render(Ui::SearchFieldComponent.new(
+      url: home_search_path(@home),
+      value: params[:q],
+      placeholder: "Search entries, items, and files...",
+      turbo_frame: "home_search_results",
+      form_data: { search_panel_target: "form" },
+      input_data: {
+        search_panel_target: "input",
+        action: "input->search-panel#queueSearch focus->search-panel#openIfPresent"
+      }
+    )) %>
+
+    <div class="absolute left-0 right-0 top-full z-30 mt-2 hidden" data-search-panel-target="panel">
+      <%= turbo_frame_tag "home_search_results" %>
+    </div>
+  </div>
 
   <%= render(Ui::FilterNavComponent.new(
     label: "Timeline filters",
