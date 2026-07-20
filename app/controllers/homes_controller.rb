@@ -1,13 +1,26 @@
 class HomesController < ApplicationController
   def index
-    @homes = current_account.homes.order(:name)
+    if existing_home
+      redirect_to home_path(existing_home)
+    else
+      redirect_to new_home_path
+    end
   end
 
   def new
-    @home = current_account.homes.build
+    if existing_home
+      redirect_to home_path(existing_home)
+    else
+      @home = current_account.homes.build
+    end
   end
 
   def create
+    if existing_home
+      redirect_to home_path(existing_home)
+      return
+    end
+
     @home = current_account.homes.build(home_params)
 
     if @home.save
@@ -27,6 +40,10 @@ class HomesController < ApplicationController
   end
 
   private
+
+  def existing_home
+    @existing_home ||= current_account.homes.first
+  end
 
   def filtered_entry_type
     params[:entry_type].presence_in(Entry::ENTRY_TYPES)
