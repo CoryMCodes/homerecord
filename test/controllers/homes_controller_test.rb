@@ -37,6 +37,8 @@ class HomesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "h1", "Main Home"
+    assert_select "a[href='#{home_path(homes(:main))}']", "Timeline"
+    assert_select "a[href='#{homes_path}']", count: 0
   end
 
   test "does not show a home from another account" do
