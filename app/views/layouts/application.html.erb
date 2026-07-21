@@ -24,7 +24,30 @@
   </head>
 
   <body data-theme="forest">
-    <main class="mx-auto min-h-screen w-full max-w-[var(--app-content-width)] px-5 pb-32 pt-11 sm:px-6 lg:px-0">
+    <header class="mx-auto flex w-full max-w-[var(--app-content-width)] justify-end px-5 pt-5 sm:px-6 lg:px-0">
+      <nav aria-label="Account" class="relative">
+        <details class="group">
+          <summary aria-label="Open account menu" class="flex size-11 cursor-pointer list-none items-center justify-center rounded-full bg-card text-foreground shadow-card ring-1 ring-border transition-[background-color,box-shadow] duration-200 hover:bg-primary-soft focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-ring [&::-webkit-details-marker]:hidden">
+            <span class="sr-only">Menu</span>
+            <span aria-hidden="true" class="flex flex-col gap-1">
+              <span class="block h-0.5 w-5 rounded-full bg-current"></span>
+              <span class="block h-0.5 w-5 rounded-full bg-current"></span>
+              <span class="block h-0.5 w-5 rounded-full bg-current"></span>
+            </span>
+          </summary>
+
+          <div class="absolute right-0 z-10 mt-2 min-w-36 rounded-lg bg-card p-2 shadow-card ring-1 ring-border">
+            <% if authenticated? %>
+              <%= button_to "Sign out", session_path, method: :delete, class: "block w-full rounded-md px-3 py-2 text-left text-sm font-semibold text-foreground transition-colors hover:bg-primary-soft hover:text-accent-foreground" %>
+            <% else %>
+              <%= link_to "Sign in", new_session_path, class: "block rounded-md px-3 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-primary-soft hover:text-accent-foreground" %>
+            <% end %>
+          </div>
+        </details>
+      </nav>
+    </header>
+
+    <main class="mx-auto min-h-screen w-full max-w-[var(--app-content-width)] px-5 pb-32 pt-6 sm:px-6 lg:px-0">
       <%= yield %>
     </main>
   </body>
